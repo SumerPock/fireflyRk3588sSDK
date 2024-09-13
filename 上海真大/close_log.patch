@@ -1,0 +1,34 @@
+drivers/media/platform/rockchip/cif/mipi-csi2.c
+@@ -812,7 +812,7 @@ static irqreturn_t rk_csirx_irq1_handler(int irq, void *ctx)
+                        snprintf(err_str, CSI_ERRSTR_LEN, "%s(ecc2)", err_str);
+                }
+ 
+-               pr_err("%s ERR1:0x%x %s\n", csi2->dev_name, val, err_str);
++               //pr_err("%s ERR1:0x%x %s\n", csi2->dev_name, val, err_str);
+ 
+                if (is_add_cnt) {
+                        csi2->err_list[RK_CSI2_ERR_ALL].cnt++;
+@@ -858,7 +858,7 @@ static irqreturn_t rk_csirx_irq2_handler(int irq, void *ctx)
+                if (val & CSIHOST_ERR2_PHYERR_CODEHS)
+                        snprintf(err_str, CSI_ERRSTR_LEN, "%s(err code) ", err_str);
+ 
+-               pr_err("%s ERR2:0x%x %s\n", csi2->dev_name, val, err_str);
++               //pr_err("%s ERR2:0x%x %s\n", csi2->dev_name, val, err_str);
+        }
+ 
+        return IRQ_HANDLED;
+		
+		
+		
+drivers/media/platform/rockchip/cif/capture.c
+@@ -9054,9 +9054,11 @@ void rkcif_irq_pingpong_v1(struct rkcif_device *cif_dev)
+                if (intstat & CSI_SIZE_ERR) {
+                        cif_dev->irq_stats.csi_size_err_cnt++;
+                        rkcif_write_register_or(cif_dev, CIF_REG_MIPI_LVDS_CTRL, 0x000A0000);
++#if 0                  
+                        v4l2_err(&cif_dev->v4l2_dev,
+                                 "ERROR: csi size err, intstat:0x%x, lastline:%d!!\n",
+                                 intstat, lastline);
++#endif
+                        return;
+                }

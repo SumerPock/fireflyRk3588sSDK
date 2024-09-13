@@ -1,0 +1,87 @@
+/arch/arm64/boot/dts/rockchip/rk3588-roc-pc-cam-8ms1m.dtsi
+@@ -37,7 +37,8 @@ port@0 {
+ 
+                        mipidphy0_in_ucam0: endpoint@1 {
+                                reg = <1>;
+-                               remote-endpoint = <&xc7160_out0>;
++                               //remote-endpoint = <&xc7160_out0>;
++                               remote-endpoint = <&imx586_out0>;
+                                data-lanes = <1 2 3 4>;
+                        };
+                };
+@@ -63,6 +64,7 @@ &i2c7 {
+         pinctrl-names = "default";
+        pinctrl-0 = <&i2c7m2_xfer>;
+ 
++#if 0
+         XC7160: XC7160b@1b{
+                compatible = "firefly,xc7160";
+                reg = <0x1b>;
+@@ -89,7 +91,39 @@ xc7160_out0: endpoint {
+                        };
+                };
+        };
++#endif
+ 
++       imx586: imx586@1a {
++               compatible = "sony,imx586";
++               reg = <0x1a>;
++               clocks = <&cru CLK_MIPI_CAMARAOUT_M1>;
++               clock-names = "xvclk";
++               pinctrl-names = "default";
++               pinctrl-0 = <&mipim1_camera1_clk>;
++               power-domains = <&power RK3588_PD_VI>;
++
++        power-gpios = <&gpio4 RK_PB5 GPIO_ACTIVE_LOW>;
++        reset-gpios = <&gpio0 RK_PD5 GPIO_ACTIVE_HIGH>;
++        pwdn-gpios = <&gpio4 RK_PB4 GPIO_ACTIVE_HIGH>;
++
++               //avdd-supply = <&vcc_mipidcphy0>;
++               firefly,clkout-enabled-index = <0>;//just try
++
++               rockchip,camera-module-index = <0>;
++               rockchip,camera-module-facing = "back";
++               //rockchip,camera-module-name = "CMK-OT2022-whz";
++               //rockchip,camera-module-lens-name = "IR0147-50IRC-8M-whz";
++               rockchip,camera-module-name = "default";
++        		rockchip,camera-module-lens-name = "default";
++
++               //lens-focus = <&cam_ircut0>;
++               port {
++                       imx586_out0: endpoint {
++                               remote-endpoint = <&mipidphy0_in_ucam0>;
++                               data-lanes = <1 2 3 4>;
++                       };
++               };
++       };
+ };
+ 
+ &mipi2_csi2 {
+@@ -150,7 +184,7 @@ cif_mipi2_in0: endpoint {
+ };
+ 
+ &rkcif_mipi_lvds2_sditf {
+-       status = "disabled";
++       status = "okay";
+ 
+        port {
+                mipi_lvds2_sditf: endpoint {
+@@ -164,15 +198,15 @@ &rkcif_mmu {
+ };
+ 
+ &rkisp0 {
+-       status = "disabled";
++       status = "okay";
+ };
+ 
+ &isp0_mmu {
+-       status = "disabled";
++       status = "okay";
+ };
+ 
+ &rkisp0_vir0 {
+-       status = "disabled";
++       status = "okay";
+ 
+        port {
+                #address-cells = <1>;
